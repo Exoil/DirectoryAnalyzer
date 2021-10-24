@@ -4,18 +4,24 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <chrono>
 
 namespace Analyzer
 {
     class BaseFileInformation
     {
         public:
-            BaseFileInformation(std::filesystem::path pathToFile);
+            BaseFileInformation();
+            BaseFileInformation(std::filesystem::path pathToFile);            
+            std::filesystem::path GetDirectoryPath();
+            std::time_t GetTime();
+            bool Equals(BaseFileInformation &object);           
+            void SetLastModificationTime();
             virtual void SetInformation();
             virtual std::string ToString();
         protected:
             std::filesystem::path path;
-            time_t lastModificationTime;
+            std::time_t lastModificationTime;
     };
 
     class DirectoryInformation :

@@ -27,6 +27,8 @@ int main()
 {    
     std::cout << "Analyze directory" << std::endl;
     std::string pathToDirectoryToAnalyze = "/Users/exoil/Documents/TestDirectory";
+    BaseFileInformation lastAnalyzedDirectory;
+    BaseFileInformation currentAnalyzedDirectory;
 
     if (!std::filesystem::exists(pathToDirectoryToAnalyze))
     {
@@ -41,18 +43,38 @@ int main()
 
         return -1;
     }
-
+    
     FileAnalyzer fileAnalyzer;
-
-    std::cout << "Machine thread count:" << fileAnalyzer.CountMachineThreads();
 
     std::vector<DirectoryInformation> directories;
     std::vector<FileInformation> files;
 
-    fileAnalyzer.SingleThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files);
+    for (int i = 0; i < 2; i++)
+    {
+        
+        currentAnalyzedDirectory = BaseFileInformation(pathToDirectoryToAnalyze);    
+        
+        if (currentAnalyzedDirectory.Equals(lastAnalyzedDirectory) && difftime(currentAnalyzedDirectory.GetTime(), lastAnalyzedDirectory.GetTime()) == 0.0)
+        {
+            std::cout << "Is Same directory!" << std::endl;
+            PrintDirectories(&directories);
+            PrintFiles(&files);
+            
+        }
 
-    PrintDirectories(&directories);
-    PrintFiles(&files);
+    else
+    {
+        directories.clear();
+        files.clear();
+
+        fileAnalyzer.SingleThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files);
+
+        PrintDirectories(&directories);
+        PrintFiles(&files);
+    }
+
+    lastAnalyzedDirectory = currentAnalyzedDirectory;
+    }
 
     std::cout << "end program" << std::endl;
 }
