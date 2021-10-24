@@ -45,6 +45,7 @@ int main()
     }
     
     FileAnalyzer fileAnalyzer;
+<<<<<<< HEAD
     std::vector<DirectoryInformation> directories;
     std::vector<FileInformation> files;
 
@@ -67,6 +68,13 @@ int main()
         files.clear();
 
         fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,2);
+=======
+
+    std::vector<DirectoryInformation> directories;
+    std::vector<FileInformation> files;
+
+    fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files);
+>>>>>>> 9809083 (test implementation)
 
         PrintDirectories(&directories);
         PrintFiles(&files);

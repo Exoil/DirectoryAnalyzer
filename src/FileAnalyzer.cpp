@@ -2,11 +2,6 @@
 
 using namespace Analyzer;
 
-unsigned int FileAnalyzer::CountMachineThreads()
-{
-    return std::thread::hardware_concurrency();
-}
-
 void FileAnalyzer::SingleThreadGetDirectoryContent(
     std::string directoryPath,
     std::vector<DirectoryInformation> *directoryContainer,
@@ -28,8 +23,7 @@ void FileAnalyzer::SingleThreadGetDirectoryContent(
 void FileAnalyzer::MultiThreadGetDirectoryContent(
     std::string directoryPath,
     std::vector<DirectoryInformation> *directoryContainer,
-    std::vector<FileInformation> *fileContainer,
-    int threadNumber)
+    std::vector<FileInformation> *fileContainer)
 {
     if (directoryContainer == nullptr || fileContainer == nullptr)
         return;
