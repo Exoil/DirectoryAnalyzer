@@ -34,46 +34,38 @@ void FileAnalyzer::MultiThreadGetDirectoryContent(
     if (directoryContainer == nullptr || fileContainer == nullptr)
         return;
 
-    if (threadNumber == 1)
+    if (threadNumber <= 1)
     {
         SingleThreadGetDirectoryContent(directoryPath, directoryContainer, fileContainer);
 
         return;
     }
 
-    auto getDirectory = [directoryContainer, fileContainer, directoryPath](int threadIndex)
+    std::vector<std::filesystem::path> directoryContentPaths;
+    std::filesystem::recursive_directory_iterator dirpos{directoryPath};
+    std::copy(begin(dirpos), end(dirpos), std::back_inserter(directoryContentPaths));
+    std::mutex lockMutex;
+    auto addFileInromation = [directoryContainer, fileContainer, &directoryContentPaths, &lockMutex](int startIndex, int iteratePerValue)
     {
-        std::vector<DirectoryInformation> directoriesTmp;
-        std::vector<FileInformation> filesTmp;
-
-        for (auto it = std::filesystem::recursive_directory_iterator(directoryPath); it != std::filesystem::recursive_directory_iterator(); it.operator++(threadIndex))
+        for (int i = startIndex; i < directoryContentPaths.size(); i += iteratePerValue)
         {
-            if (std::filesystem::is_directory(it->path()))
-                directoriesTmp.push_back(DirectoryInformation(it->path()));
+            lockMutex.lock();
+            if (std::filesystem::is_directory(directoryContentPaths[i]))
+                directoryContainer->push_back(DirectoryInformation(directoryContentPaths[i]));
             else
-                filesTmp.push_back(FileInformation(it->path()));
+                fileContainer->push_back(FileInformation(directoryContentPaths[i]));
+            lockMutex.unlock();
         }
-
-        directoryContainer->insert(directoryContainer->end(), directoriesTmp.begin(), directoriesTmp.end());
-        fileContainer->insert(fileContainer->end(), filesTmp.begin(), filesTmp.end());
-
-        directoriesTmp.clear();
-        filesTmp.clear();
-
-        return;
     };
 
     std::vector<std::thread> threads;
 
     for (int i = 0; i < threadNumber; i++)
-    {
-        threads.push_back(std::thread(getDirectory, i + 1));
-    }
+        threads.push_back(std::thread(addFileInromation, i, i + 2));
 
-    for (int i = 0; i < threadNumber; i++)
-    {
-        threads[i].join();
-    }
+    for (auto &worker : threads)
+        worker.join();
+
 
     threads.clear();
 }
