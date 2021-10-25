@@ -2,8 +2,9 @@
 #include "FileInformation.hpp"
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 #include <thread>
+#include <algorithm>
+#include <execution>
 
 
 namespace Analyzer
@@ -15,6 +16,10 @@ namespace Analyzer
             std::string directoryPath,
             std::vector<DirectoryInformation> *directoryContainer,
             std::vector<FileInformation> *fileContainer);
-        unsigned int CountMachineThreads();
+        void MultiThreadGetDirectoryContent(
+            std::string directoryPath,
+            std::vector<DirectoryInformation> *directoryContainer,
+            std::vector<FileInformation> *fileContainer,
+            int threadNumber);
     };
 }
