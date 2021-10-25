@@ -17,7 +17,7 @@ void PrintDirectories(std::vector<DirectoryInformation> *directories)
 void PrintFiles(std::vector<FileInformation> *files)
 {
     std::cout << "Files count: " << files->size() << std::endl;
-    std::cout << "Files data:"c << std::endl;
+    std::cout << "Files data:" << std::endl;
 
     for (FileInformation &file : *files)
         std::cout << file.ToString() << std::endl;
@@ -45,7 +45,6 @@ int main()
     }
     
     FileAnalyzer fileAnalyzer;
-<<<<<<< HEAD
     std::vector<DirectoryInformation> directories;
     std::vector<FileInformation> files;
 
@@ -68,13 +67,6 @@ int main()
         files.clear();
 
         fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,2);
-=======
-
-    std::vector<DirectoryInformation> directories;
-    std::vector<FileInformation> files;
-
-    fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files);
->>>>>>> 9809083 (test implementation)
 
         PrintDirectories(&directories);
         PrintFiles(&files);
