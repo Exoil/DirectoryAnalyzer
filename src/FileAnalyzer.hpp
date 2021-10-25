@@ -18,6 +18,7 @@ namespace Analyzer
         void MultiThreadGetDirectoryContent(
             std::string directoryPath,
             std::vector<DirectoryInformation> *directoryContainer,
-            std::vector<FileInformation> *fileContainer);
+            std::vector<FileInformation> *fileContainer,
+            int threadNumber);
     };
 }
