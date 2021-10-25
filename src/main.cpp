@@ -17,7 +17,7 @@ void PrintDirectories(std::vector<DirectoryInformation> *directories)
 void PrintFiles(std::vector<FileInformation> *files)
 {
     std::cout << "Files count: " << files->size() << std::endl;
-    std::cout << "Files data:" << std::endl;
+    std::cout << "Files data:"c << std::endl;
 
     for (FileInformation &file : *files)
         std::cout << file.ToString() << std::endl;
