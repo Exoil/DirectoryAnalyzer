@@ -4,6 +4,7 @@
 
 using namespace Analyzer;
 
+int static numberOfThreads = 1;
 
 void PrintDirectories(std::vector<DirectoryInformation> *directories)
 {
@@ -23,56 +24,124 @@ void PrintFiles(std::vector<FileInformation> *files)
         std::cout << file.ToString() << std::endl;
 }
 
+void PrintMenu()
+{
+    std::stringstream buffer;
+    buffer << "1. Set number threads to use\n";
+    buffer << "2. Analyze Folder\n";
+    buffer << "Count machine threads: " << std::thread::hardware_concurrency() << "\n";
+    buffer << "Eneter any other character to exit\n";
+
+    std::cout << buffer.str() << std::endl;
+}
+
+void SetNumberOfThreads()
+{
+    std::string numberOfThreadsCount = "";
+    std::cout << "Set number of threads to use" << std::endl;
+    std::cin >> numberOfThreadsCount;
+
+    try
+    {
+        numberOfThreads = std::stoi(numberOfThreadsCount);
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "entered character is' not a number, setting to default threads number: 1 " << std::endl;
+        numberOfThreads = 1;
+    }
+}
+
+void AnalyzeDirectory(
+    BaseFileInformation &currentDirectoryToAnalyze,
+    BaseFileInformation &lastAnalyzedDirectory,
+    std::vector<DirectoryInformation> &directoryResult,
+    std::vector<FileInformation> &filesResult)
+{
+    std::string pathToDirectory = "";
+    std::cout << "Enter path to directory" << std::endl;
+
+    std::cin >> pathToDirectory;
+
+    FileAnalyzer fileAnalyzer;
+
+    if (!std::filesystem::exists(pathToDirectory))
+    {
+        std::cout << "Target directory doesn't exists. Return to menu";
+
+        return;
+    }
+
+    if (!std::filesystem::is_directory(pathToDirectory))
+    {
+        std::cout << "Target file isn't directory. Return to menu";
+
+        return;
+    }
+
+    currentDirectoryToAnalyze = BaseFileInformation(std::filesystem::path(pathToDirectory));
+   
+    if (currentDirectoryToAnalyze.Equals(lastAnalyzedDirectory) && difftime(currentDirectoryToAnalyze.GetTime(), lastAnalyzedDirectory.GetTime()) == 0.0)
+    {
+        std::cout << "Is same directory and nothing changed last time" << std::endl;
+        PrintDirectories(&directoryResult);
+        PrintFiles(&filesResult);
+
+        return;
+    }
+
+    directoryResult.clear();
+    filesResult.clear();
+
+    auto start = std::chrono::steady_clock::now();
+    fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectory, &directoryResult, &filesResult, numberOfThreads);
+    auto end = std::chrono::steady_clock::now();
+
+    std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(end - start).count() << " ms\n";
+    PrintDirectories(&directoryResult);
+    PrintFiles(&filesResult);
+
+    lastAnalyzedDirectory = currentDirectoryToAnalyze;
+}
+
 int main()
-{    
-    std::cout << "Analyze directory" << std::endl;
-    std::string pathToDirectoryToAnalyze = "/Users/exoil/Documents/TestDirectory";
+{
+    bool exitFlag = false;
+    std::string chosedOption = "";
+    int chosedOptionAsInt = -1;
     BaseFileInformation lastAnalyzedDirectory;
     BaseFileInformation currentAnalyzedDirectory;
-
-    if (!std::filesystem::exists(pathToDirectoryToAnalyze))
-    {
-        std::cout << "Target directory doesn't exists";
-
-        return -1;
-    }
-
-    if (!std::filesystem::is_directory(pathToDirectoryToAnalyze))
-    {
-        std::cout << "Target file isn't directory";
-
-        return -1;
-    }
-    
-    FileAnalyzer fileAnalyzer;
     std::vector<DirectoryInformation> directories;
     std::vector<FileInformation> files;
 
-    for (int i = 0; i < 1; i++)
+    while (exitFlag != true)
     {
-        
-        currentAnalyzedDirectory = BaseFileInformation(pathToDirectoryToAnalyze);    
-        
-        if (currentAnalyzedDirectory.Equals(lastAnalyzedDirectory) && difftime(currentAnalyzedDirectory.GetTime(), lastAnalyzedDirectory.GetTime()) == 0.0)
+        PrintMenu();
+        std::cin >> chosedOption;
+
+        try
         {
-            std::cout << "Is Same directory!" << std::endl;
-            PrintDirectories(&directories);
-            PrintFiles(&files);
-            
+            chosedOptionAsInt = std::stoi(chosedOption);
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "entered character is' not a number, exiting program" << std::endl;
+            break;
         }
 
-    else
-    {
-        directories.clear();
-        files.clear();
+        switch (chosedOptionAsInt)
+        {
+        case 1:
+            SetNumberOfThreads();
+            break;
+        case 2:
+            AnalyzeDirectory(currentAnalyzedDirectory, lastAnalyzedDirectory, directories, files);
+            break;
+        default:
+            exitFlag = true;
+            break;
+        }
 
-        fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,4);
-
-        PrintDirectories(&directories);
-        PrintFiles(&files);
-    }
-
-    //lastAnalyzedDirectory = currentAnalyzedDirectory;
     }
 
     std::cout << "end program" << std::endl;
