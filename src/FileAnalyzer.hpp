@@ -15,6 +15,11 @@ namespace Analyzer
             std::string directoryPath,
             std::vector<DirectoryInformation> *directoryContainer,
             std::vector<FileInformation> *fileContainer);
+        void MultiThreadGetDirectoryContent(
+            std::string directoryPath,
+            std::vector<DirectoryInformation> *directoryContainer,
+            std::vector<FileInformation> *fileContainer,
+            int threadNumber);
         unsigned int CountMachineThreads();
     };
 }

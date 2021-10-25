@@ -45,11 +45,10 @@ int main()
     }
     
     FileAnalyzer fileAnalyzer;
-
     std::vector<DirectoryInformation> directories;
     std::vector<FileInformation> files;
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 1; i++)
     {
         
         currentAnalyzedDirectory = BaseFileInformation(pathToDirectoryToAnalyze);    
@@ -67,7 +66,7 @@ int main()
         directories.clear();
         files.clear();
 
-        fileAnalyzer.SingleThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files);
+        fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,2);
 
         PrintDirectories(&directories);
         PrintFiles(&files);
