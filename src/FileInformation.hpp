@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <fstream>
 #include <chrono>
 
 namespace Analyzer
@@ -49,7 +50,7 @@ namespace Analyzer
             unsigned int countCharacters = 0;
         private:
             std::string ReadFile();
-            void SetCountWords();
-            void SetCountCharacters();
+            void SetCountWords(std::string fileContent);
+            void SetCountCharacters(std::string fileContent);
     };
 }

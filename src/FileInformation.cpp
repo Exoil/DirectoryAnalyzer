@@ -13,25 +13,47 @@ void FileInformation::SetInformation()
     BaseFileInformation::SetInformation();
     extension = path.extension();
     size = std::filesystem::file_size(path);
-    SetCountWords();
-    SetCountCharacters();
+    std::string fileContent = ReadFile();
+    SetCountWords(fileContent);
+    SetCountCharacters(fileContent);
 }
 
 std::string FileInformation::ReadFile()
 {
-    return "";
+    std::string fileContent = "";
+    std::fstream fileToRead(path);
+
+    if (!fileToRead.is_open())
+        return fileContent;
+
+    fileContent.assign((std::istreambuf_iterator<char>(fileToRead)),
+                       (std::istreambuf_iterator<char>()));
+
+    return fileContent;
 }
 
-void FileInformation::SetCountWords()
+void FileInformation::SetCountWords(std::string fileContent)
 {
     countWords = 0;
-    std::string fileContent = ReadFile();
+    std::vector<std::string> splitedStirng;
+    std::istringstream iss(fileContent);
+    std::string word;
+
+    while(std::getline(iss, word, ' '))
+        splitedStirng.push_back(word);
+
+    countWords = splitedStirng.size();
+    splitedStirng.clear();
+    iss.clear();
 }
 
-void FileInformation::SetCountCharacters()
+void FileInformation::SetCountCharacters(std::string fileContent)
 {
     countCharacters = 0;
-    std::string fileContent = ReadFile();
+    std::erase(fileContent, ' ');
+    std::erase(fileContent, '\n');
+
+    countCharacters = fileContent.size();
 }
 
 std::string FileInformation::ToString()
