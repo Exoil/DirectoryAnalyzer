@@ -66,13 +66,13 @@ int main()
         directories.clear();
         files.clear();
 
-        fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,2);
+        fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectoryToAnalyze, &directories, &files,4);
 
         PrintDirectories(&directories);
         PrintFiles(&files);
     }
 
-    lastAnalyzedDirectory = currentAnalyzedDirectory;
+    //lastAnalyzedDirectory = currentAnalyzedDirectory;
     }
 
     std::cout << "end program" << std::endl;

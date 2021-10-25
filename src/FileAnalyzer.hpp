@@ -2,6 +2,7 @@
 #include "FileInformation.hpp"
 #include <fstream>
 #include <sstream>
+#include <thread>
 #include <algorithm>
 #include <execution>
 

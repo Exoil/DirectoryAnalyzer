@@ -40,27 +40,26 @@ void FileAnalyzer::MultiThreadGetDirectoryContent(
     std::filesystem::recursive_directory_iterator dirpos{directoryPath};
     std::copy(begin(dirpos), end(dirpos), std::back_inserter(directoryContentPaths));
     std::mutex lockMutex;
-    auto addFileInromation = [directoryContainer, fileContainer, &directoryContentPaths, &lockMutex](int startIndex, int iteratePerValue)
+
+    auto addFileInromation = [directoryContainer, fileContainer, &directoryContentPaths, &lockMutex](int startIndex, int iteration)
     {
-        for (int i = startIndex; i < directoryContentPaths.size(); i += iteratePerValue)
+        for (int i = startIndex; i < directoryContentPaths.size(); i += iteration)
         {
-            lockMutex.lock();
+            const std::lock_guard<std::mutex> lock(lockMutex);
             if (std::filesystem::is_directory(directoryContentPaths[i]))
                 directoryContainer->push_back(DirectoryInformation(directoryContentPaths[i]));
             else
                 fileContainer->push_back(FileInformation(directoryContentPaths[i]));
-            lockMutex.unlock();
         }
     };
 
     std::vector<std::thread> threads;
 
     for (int i = 0; i < threadNumber; i++)
-        threads.push_back(std::thread(addFileInromation, i, i + 2));
+        threads.push_back(std::thread(addFileInromation, i, threadNumber));
 
-    for (auto &worker : threads)
-        worker.join();
-
+    for (std::thread &thread : threads)
+        thread.join();
 
     threads.clear();
 }
