@@ -44,4 +44,4 @@
 tempCodeRunnerFile
 .main.dSYM
 main
-.build/
+.build/*
