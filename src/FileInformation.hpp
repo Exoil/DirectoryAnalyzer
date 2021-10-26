@@ -23,6 +23,7 @@ namespace Analyzer
         protected:
             std::filesystem::path path;
             std::time_t lastModificationTime;
+            std::string content;
     };
 
     class DirectoryInformation :
@@ -42,15 +43,15 @@ namespace Analyzer
         public:
             FileInformation(std::filesystem::path pathToDirectory);          
             void SetInformation() override;
-            std::string ToString() override;            
+            std::string ToString() override;
+            void SetContent();
+            void SetContent(std::string content);
+            std::string GetContent();
+            unsigned int GetCountWords();
+            unsigned int GetCountCharacters();
         protected:
-            size_t size;
-            std::string extension = "";
-            unsigned int countWords = 0;
-            unsigned int countCharacters = 0;
-        private:
-            std::string ReadFile();
-            void SetCountWords(std::string fileContent);
-            void SetCountCharacters(std::string fileContent);
+            size_t _size;
+            std::string _content;
+            std::string _extension = "";
     };
 }
