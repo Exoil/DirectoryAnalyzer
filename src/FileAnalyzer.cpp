@@ -11,7 +11,7 @@ void FileAnalyzer::SingleThreadGetDirectoryContent(
         throw std::invalid_argument("directoryPath is empty or  path does not point to a directory");
     if (directoryContainer == nullptr)
         throw std::invalid_argument("direcotryContainer is null pointer");
-    if (fileContainer)
+    if (fileContainer == nullptr)
         throw std::invalid_argument("fileContainer is null pointer");
 
     directoryContainer->clear();
@@ -36,7 +36,7 @@ void FileAnalyzer::MultiThreadGetDirectoryContent(
         throw std::invalid_argument("directoryPath is empty or  path does not point to a directory");
     if (directoryContainer == nullptr)
         throw std::invalid_argument("direcotryContainer is null pointer");
-    if (fileContainer)
+    if (fileContainer == nullptr)
         throw std::invalid_argument("fileContainer is null pointer");
     if (threadNumber == 0)
         throw std::invalid_argument("threadNumber is equal 0");
@@ -44,7 +44,7 @@ void FileAnalyzer::MultiThreadGetDirectoryContent(
     directoryContainer->clear();
     fileContainer->clear();
 
-    if (threadNumber = 1)
+    if (threadNumber == 1)
     {
         SingleThreadGetDirectoryContent(pathToDirectory, directoryContainer, fileContainer);
 
