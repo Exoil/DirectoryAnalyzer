@@ -3,41 +3,56 @@
 using namespace Analyzer;
 
 void FileAnalyzer::SingleThreadGetDirectoryContent(
-    std::string directoryPath,
+    std::string pathToDirectory,
     std::vector<DirectoryInformation> *directoryContainer,
     std::vector<FileInformation> *fileContainer)
 {
-    if (directoryContainer == nullptr 
-        || fileContainer == nullptr)
-        return;
+    if (pathToDirectory.compare("") == 0 || !std::filesystem::exists(pathToDirectory) || !std::filesystem::is_directory(pathToDirectory))
+        throw std::invalid_argument("directoryPath is empty or  path does not point to a directory");
+    if (directoryContainer == nullptr)
+        throw std::invalid_argument("direcotryContainer is null pointer");
+    if (fileContainer)
+        throw std::invalid_argument("fileContainer is null pointer");
 
-        for (auto &rIt : std::filesystem::recursive_directory_iterator(directoryPath))
-        {
-            if (std::filesystem::is_directory(rIt.path()))
-                directoryContainer->push_back(DirectoryInformation(rIt.path()));
-            else
-                fileContainer->push_back(FileInformation(rIt.path()));
-        }        
+    directoryContainer->clear();
+    fileContainer->clear();
+
+    for (auto &rIt : std::filesystem::recursive_directory_iterator(pathToDirectory))
+    {
+        if (std::filesystem::is_directory(rIt.path()))
+            directoryContainer->push_back(DirectoryInformation(rIt.path()));
+        else
+            fileContainer->push_back(FileInformation(rIt.path()));
+    }
 }
 
 void FileAnalyzer::MultiThreadGetDirectoryContent(
-    std::string directoryPath,
+    std::string pathToDirectory,
     std::vector<DirectoryInformation> *directoryContainer,
     std::vector<FileInformation> *fileContainer,
-    int threadNumber)
+    unsigned int threadNumber)
 {
-    if (directoryContainer == nullptr || fileContainer == nullptr)
-        return;
+    if (pathToDirectory.compare("") == 0 || !std::filesystem::exists(pathToDirectory) || !std::filesystem::is_directory(pathToDirectory))
+        throw std::invalid_argument("directoryPath is empty or  path does not point to a directory");
+    if (directoryContainer == nullptr)
+        throw std::invalid_argument("direcotryContainer is null pointer");
+    if (fileContainer)
+        throw std::invalid_argument("fileContainer is null pointer");
+    if (threadNumber == 0)
+        throw std::invalid_argument("threadNumber is equal 0");
 
-    if (threadNumber <= 1)
+    directoryContainer->clear();
+    fileContainer->clear();
+
+    if (threadNumber = 1)
     {
-        SingleThreadGetDirectoryContent(directoryPath, directoryContainer, fileContainer);
+        SingleThreadGetDirectoryContent(pathToDirectory, directoryContainer, fileContainer);
 
         return;
     }
 
     std::vector<std::filesystem::path> directoryContentPaths;
-    std::filesystem::recursive_directory_iterator dirpos{directoryPath};
+    std::filesystem::recursive_directory_iterator dirpos{pathToDirectory};
     std::copy(begin(dirpos), end(dirpos), std::back_inserter(directoryContentPaths));
     std::mutex lockMutex;
 

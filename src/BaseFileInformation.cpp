@@ -2,14 +2,12 @@
 
 using namespace Analyzer;
 
-BaseFileInformation::BaseFileInformation() : 
-    path("")
+BaseFileInformation::BaseFileInformation() : path("")
 {
     lastModificationTime = (time_t)(-1);
 }
 
-BaseFileInformation::BaseFileInformation(std::filesystem::path pathToFile) :
-    path(pathToFile)
+BaseFileInformation::BaseFileInformation(std::filesystem::path pathToFile) : path(pathToFile)
 {
     SetInformation();
 }
@@ -36,7 +34,8 @@ std::string BaseFileInformation::ToString()
     if (path.has_parent_path())
         buffer << "Parent name" << path.parent_path().filename() << " ";
     else
-        buffer << "Parent name: no parent" <<" ";
+        buffer << "Parent name: no parent"
+               << " ";
 
     std::tm *gmt = std::gmtime(&lastModificationTime);
 
@@ -51,6 +50,7 @@ std::filesystem::path BaseFileInformation::GetDirectoryPath()
 {
     return path;
 }
+
 std::time_t BaseFileInformation::GetTime()
 {
     return lastModificationTime;

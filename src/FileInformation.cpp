@@ -39,7 +39,7 @@ void FileInformation::SetCountWords(std::string fileContent)
     std::istringstream iss(fileContent);
     std::string word;
 
-    while(std::getline(iss, word, ' '))
+    while (std::getline(iss, word, ' '))
         splitedStirng.push_back(word);
 
     countWords = splitedStirng.size();

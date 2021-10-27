@@ -4,7 +4,7 @@
 
 using namespace Analyzer;
 
-int static numberOfThreads = 1;
+unsigned int static numberOfThreads = 1;
 
 void PrintDirectories(std::vector<DirectoryInformation> *directories)
 {
@@ -60,27 +60,10 @@ void AnalyzeDirectory(
 {
     std::string pathToDirectory = "";
     std::cout << "Enter path to directory" << std::endl;
-
     std::cin >> pathToDirectory;
-
     FileAnalyzer fileAnalyzer;
-
-    if (!std::filesystem::exists(pathToDirectory))
-    {
-        std::cout << "Target directory doesn't exists. Return to menu";
-
-        return;
-    }
-
-    if (!std::filesystem::is_directory(pathToDirectory))
-    {
-        std::cout << "Target file isn't directory. Return to menu";
-
-        return;
-    }
-
     currentDirectoryToAnalyze = BaseFileInformation(std::filesystem::path(pathToDirectory));
-   
+
     if (currentDirectoryToAnalyze.Equals(lastAnalyzedDirectory) && difftime(currentDirectoryToAnalyze.GetTime(), lastAnalyzedDirectory.GetTime()) == 0.0)
     {
         std::cout << "Is same directory and nothing changed last time" << std::endl;
@@ -90,11 +73,19 @@ void AnalyzeDirectory(
         return;
     }
 
-    directoryResult.clear();
-    filesResult.clear();
-
     auto start = std::chrono::steady_clock::now();
-    fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectory, &directoryResult, &filesResult, numberOfThreads);
+
+    try
+    {
+        fileAnalyzer.MultiThreadGetDirectoryContent(pathToDirectory, &directoryResult, &filesResult, numberOfThreads);
+    }
+    catch (std::invalid_argument exception)
+    {
+        std::cout << exception.what() << " back to menu";
+
+        return;
+    }
+
     auto end = std::chrono::steady_clock::now();
 
     std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(end - start).count() << " ms\n";
@@ -123,7 +114,7 @@ int main()
         {
             chosedOptionAsInt = std::stoi(chosedOption);
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             std::cout << "entered character is' not a number, exiting program" << std::endl;
             break;
@@ -141,7 +132,6 @@ int main()
             exitFlag = true;
             break;
         }
-
     }
 
     std::cout << "end program" << std::endl;
