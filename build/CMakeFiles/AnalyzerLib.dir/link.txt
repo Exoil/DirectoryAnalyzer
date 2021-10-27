@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libAnalyzerLib.a CMakeFiles/AnalyzerLib.dir/src/BaseFileInformation.cpp.o CMakeFiles/AnalyzerLib.dir/src/DirectoryInformation.cpp.o CMakeFiles/AnalyzerLib.dir/src/FileAnalyzer.cpp.o CMakeFiles/AnalyzerLib.dir/src/FileInformation.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libAnalyzerLib.a
