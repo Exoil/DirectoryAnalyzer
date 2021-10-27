@@ -9,7 +9,8 @@ BaseFileInformation::BaseFileInformation() : path("")
 
 BaseFileInformation::BaseFileInformation(std::filesystem::path pathToFile) : path(pathToFile)
 {
-    SetInformation();
+    if (!pathToFile.empty())
+        SetInformation();
 }
 
 void BaseFileInformation::SetInformation()

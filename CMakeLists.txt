@@ -1,7 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.8)
 project(DirectoryAnalyzer VERSION 1.0.0)
 
-# specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -21,9 +20,18 @@ set(LIB
     ./src/FileInformation.cpp
     )
 
-# add_library("${PROJECT_NAME}"-lib STATIC "${LIB}" )
-add_executable("${PROJECT_NAME}" "${SRC}")
-target_compile_options("${PROJECT_NAME}" PRIVATE "${FLAGS}")
-# target_link_libraries("${PROJECT_NAME}", "${PROJECT_NAME}"-lib)
 
-#install(TARGETS "${PROJECT_NAME}" SRC)
+add_library(AnalyzerLib STATIC "${LIB}" )
+add_executable("${PROJECT_NAME}" ./src/main.cpp)
+
+target_link_libraries("${PROJECT_NAME}" AnalyzerLib)
+
+target_compile_options("${PROJECT_NAME}" PRIVATE "${FLAGS}")
+target_compile_options(AnalyzerLib PRIVATE "${FLAGS}")
+
+enable_testing()
+find_package(GTest REQUIRED)
+
+add_executable(AnalyzerUnitTests ./tests/AnalyzerTests.cpp)
+target_link_libraries(AnalyzerUnitTests AnalyzerLib GTest::gtest GTest::gtest_main)
+target_compile_options(AnalyzerUnitTests PUBLIC "${FLAGS}")
