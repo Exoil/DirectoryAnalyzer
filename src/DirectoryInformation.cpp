@@ -5,7 +5,8 @@ using namespace Analyzer;
 DirectoryInformation::DirectoryInformation(std::filesystem::path pathToFile)
     : BaseFileInformation(pathToFile)
 {
-    SetInformation();
+    if (!pathToFile.empty())
+        SetInformation();
 }
 
 void DirectoryInformation::SetInformation()

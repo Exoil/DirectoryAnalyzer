@@ -5,55 +5,68 @@ using namespace Analyzer;
 FileInformation::FileInformation(std::filesystem::path pathToFile)
     : BaseFileInformation(pathToFile)
 {
-    SetInformation();
+    if(!pathToFile.empty())
+        SetInformation();
 }
 
 void FileInformation::SetInformation()
 {
     BaseFileInformation::SetInformation();
-    extension = path.extension();
-    size = std::filesystem::file_size(path);
-    std::string fileContent = ReadFile();
-    SetCountWords(fileContent);
-    SetCountCharacters(fileContent);
+    _extension = path.extension();
+    _size = std::filesystem::file_size(path);
+    SetContent();
 }
 
-std::string FileInformation::ReadFile()
+void FileInformation::SetContent()
 {
-    std::string fileContent = "";
+    _content = "";
     std::fstream fileToRead(path);
 
     if (!fileToRead.is_open())
-        return fileContent;
+        return;
 
-    fileContent.assign((std::istreambuf_iterator<char>(fileToRead)),
+    _content.assign((std::istreambuf_iterator<char>(fileToRead)),
                        (std::istreambuf_iterator<char>()));
-
-    return fileContent;
 }
 
-void FileInformation::SetCountWords(std::string fileContent)
+void FileInformation::SetContent(std::string content)
 {
-    countWords = 0;
+    _content = content;
+}
+
+unsigned int FileInformation::GetCountWords()
+{
+    unsigned _countWords = 0;
+    std::string contentCopy = _content;
     std::vector<std::string> splitedStirng;
-    std::istringstream iss(fileContent);
+    std::istringstream iss(contentCopy);
     std::string word;
 
     while(std::getline(iss, word, ' '))
         splitedStirng.push_back(word);
 
-    countWords = splitedStirng.size();
+    _countWords = splitedStirng.size();
     splitedStirng.clear();
     iss.clear();
+
+    return _countWords;
 }
 
-void FileInformation::SetCountCharacters(std::string fileContent)
+unsigned int FileInformation::GetCountCharacters()
 {
-    countCharacters = 0;
-    std::erase(fileContent, ' ');
-    std::erase(fileContent, '\n');
+    unsigned int countCharacters = 0;
+    std::string contentCopy = _content;
+    std::erase(contentCopy, ' ');
+    std::erase(contentCopy, '\n');
 
-    countCharacters = fileContent.size();
+    countCharacters = contentCopy.size();
+
+    return countCharacters;
+}
+
+void FileInformation::SetContent(std::string content)
+{
+    _content = content;
 }
 
 std::string FileInformation::ToString()
@@ -61,10 +74,10 @@ std::string FileInformation::ToString()
     std::stringstream buffer;
     buffer << "FileType: File ";
     buffer << BaseFileInformation::ToString() << " ";
-    buffer << "size: " << size << " ";
-    buffer << "extension: " << extension << " ";
-    buffer << "Word count: " << countWords << " ";
-    buffer << "Character count: " << countCharacters << " ";
+    buffer << "size: " << _size << " ";
+    buffer << "extension: " << _extension << " ";
+    buffer << "Word count: " << GetCountWords() << " ";
+    buffer << "Character count: " << GetCountCharacters() << " ";
     std::string outputString = buffer.str();
 
     return outputString;
