@@ -8,7 +8,6 @@ unsigned int static numberOfThreads = 1;
 
 void PrintDirectories(std::vector<DirectoryInformation> *directories)
 {
-    std::cout << "Directorys count: " << directories->size() << std::endl;
     std::cout << "Direcotries data:" << std::endl;
 
     for (DirectoryInformation &directory : *directories)
@@ -17,7 +16,6 @@ void PrintDirectories(std::vector<DirectoryInformation> *directories)
 
 void PrintFiles(std::vector<FileInformation> *files)
 {
-    std::cout << "Files count: " << files->size() << std::endl;
     std::cout << "Files data:" << std::endl;
 
     for (FileInformation &file : *files)
@@ -30,6 +28,7 @@ void PrintMenu()
     buffer << "1. Set number threads to use\n";
     buffer << "2. Analyze Folder\n";
     buffer << "Count machine threads: " << std::thread::hardware_concurrency() << "\n";
+    buffer << "Current machine threads set use: " << numberOfThreads <<"\n";
     buffer << "Eneter any other character to exit\n";
 
     std::cout << buffer.str() << std::endl;
@@ -47,7 +46,7 @@ void SetNumberOfThreads()
     }
     catch (const std::exception &e)
     {
-        std::cout << "entered character is' not a number, setting to default threads number: 1 " << std::endl;
+        std::cout << "entered character isn't a number, setting to default threads number: 1 " << std::endl;
         numberOfThreads = 1;
     }
 }
@@ -61,6 +60,14 @@ void AnalyzeDirectory(
     std::string pathToDirectory = "";
     std::cout << "Enter path to directory" << std::endl;
     std::cin >> pathToDirectory;
+
+    if (pathToDirectory.compare("") == 0 || !std::filesystem::exists(pathToDirectory) || !std::filesystem::is_directory(pathToDirectory))
+    {
+        std::cout << "Target path isn't directrory or not exists, return to menu" << std::endl;
+
+        return;
+    }
+
     FileAnalyzer fileAnalyzer;
     currentDirectoryToAnalyze = BaseFileInformation(std::filesystem::path(pathToDirectory));
 
@@ -69,6 +76,10 @@ void AnalyzeDirectory(
         std::cout << "Is same directory and nothing changed last time" << std::endl;
         PrintDirectories(&directoryResult);
         PrintFiles(&filesResult);
+        std::cout << std::endl;
+        std::cout << "Is same directory and nothing changed last time" << std::endl;
+        std::cout << "Directory count " << directoryResult.size() << std::endl;
+        std::cout << "Files count " << filesResult.size() << std::endl;
 
         return;
     }
@@ -88,9 +99,14 @@ void AnalyzeDirectory(
 
     auto end = std::chrono::steady_clock::now();
 
-    std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(end - start).count() << " ms\n";
+    std::cout << "Directory count " << directoryResult.size() << std::endl;
+    std::cout << "Files count " << filesResult.size() << std::endl;
     PrintDirectories(&directoryResult);
     PrintFiles(&filesResult);
+    std::cout << std::endl;
+    std::cout << "Time elapsed: " << std::chrono::duration<double, std::milli>(end - start).count() << " ms\n";
+    std::cout << "Directory count " << directoryResult.size() << std::endl;
+    std::cout << "Files count " << filesResult.size() << std::endl;
 
     lastAnalyzedDirectory = currentDirectoryToAnalyze;
 }
