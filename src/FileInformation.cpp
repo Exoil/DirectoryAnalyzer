@@ -64,11 +64,6 @@ unsigned int FileInformation::GetCountCharacters()
     return countCharacters;
 }
 
-void FileInformation::SetContent(std::string content)
-{
-    _content = content;
-}
-
 std::string FileInformation::ToString()
 {
     std::stringstream buffer;

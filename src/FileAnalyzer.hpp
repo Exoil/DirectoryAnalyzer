@@ -5,7 +5,6 @@
 #include <thread>
 #include <algorithm>
 #include <execution>
-#include <exception>
 
 namespace Analyzer
 {
