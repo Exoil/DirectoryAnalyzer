@@ -23,7 +23,6 @@ namespace Analyzer
         protected:
             std::filesystem::path path;
             std::time_t lastModificationTime;
-            std::string content;
     };
 
     class DirectoryInformation : public BaseFileInformation
