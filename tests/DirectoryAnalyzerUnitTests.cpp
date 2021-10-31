@@ -23,8 +23,6 @@ TEST(FileAnalyzer, SuccessSingleThreadGetDirectoryContent)
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::cout << currentPath.string() << std::endl;
-    std::cout << pathToTestDirectory.string() << std::endl;
     std::vector<Analyzer::DirectoryInformation>
         directories;
     std::vector<Analyzer::FileInformation> files;
