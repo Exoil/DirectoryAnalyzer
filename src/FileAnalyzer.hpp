@@ -5,6 +5,7 @@
 #include <thread>
 #include <algorithm>
 #include <execution>
+#include <list>
 
 namespace Analyzer
 {
@@ -13,12 +14,12 @@ namespace Analyzer
     public:
         void SingleThreadGetDirectoryContent(
             std::string pathToDirectory,
-            std::vector<DirectoryInformation> *directoryContainer,
-            std::vector<FileInformation> *fileContainer);
+            std::list<DirectoryInformation> *directoryContainer,
+            std::list<FileInformation> *fileContainer);
         void MultiThreadGetDirectoryContent(
             std::string pathToDirectory,
-            std::vector<DirectoryInformation> *directoryContainer,
-            std::vector<FileInformation> *fileContainer,
+            std::list<DirectoryInformation> *directoryContainer,
+            std::list<FileInformation> *fileContainer,
             unsigned int threadNumber);
     };
 }
