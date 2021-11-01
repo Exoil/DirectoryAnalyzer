@@ -6,7 +6,7 @@ using namespace Analyzer;
 
 unsigned int static numberOfThreads = 1;
 
-void PrintDirectories(std::vector<DirectoryInformation> *directories)
+void PrintDirectories(std::list<DirectoryInformation> *directories)
 {
     std::cout << "Direcotries data:" << std::endl;
 
@@ -14,7 +14,7 @@ void PrintDirectories(std::vector<DirectoryInformation> *directories)
         std::cout << directory.ToString() << std::endl;
 }
 
-void PrintFiles(std::vector<FileInformation> *files)
+void PrintFiles(std::list<FileInformation> *files)
 {
     std::cout << "Files data:" << std::endl;
 
@@ -54,8 +54,8 @@ void SetNumberOfThreads()
 void AnalyzeDirectory(
     BaseFileInformation &currentDirectoryToAnalyze,
     BaseFileInformation &lastAnalyzedDirectory,
-    std::vector<DirectoryInformation> &directoryResult,
-    std::vector<FileInformation> &filesResult)
+    std::list<DirectoryInformation> &directoryResult,
+    std::list<FileInformation> &filesResult)
 {
     std::string pathToDirectory = "";
     std::cout << "Enter path to directory" << std::endl;
@@ -118,8 +118,8 @@ int main()
     int chosedOptionAsInt = -1;
     BaseFileInformation lastAnalyzedDirectory;
     BaseFileInformation currentAnalyzedDirectory;
-    std::vector<DirectoryInformation> directories;
-    std::vector<FileInformation> files;
+    std::list<DirectoryInformation> directories;
+    std::list<FileInformation> files;
 
     while (exitFlag != true)
     {

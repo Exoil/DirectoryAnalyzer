@@ -4,8 +4,8 @@ using namespace Analyzer;
 
 void FileAnalyzer::SingleThreadGetDirectoryContent(
     std::string pathToDirectory,
-    std::vector<DirectoryInformation> *directoryContainer,
-    std::vector<FileInformation> *fileContainer)
+    std::list<DirectoryInformation> *directoryContainer,
+    std::list<FileInformation> *fileContainer)
 {
     if (pathToDirectory.compare("") == 0 || !std::filesystem::exists(pathToDirectory) || !std::filesystem::is_directory(pathToDirectory))
         throw std::invalid_argument("directoryPath is empty or  path does not point to a directory");
@@ -22,14 +22,14 @@ void FileAnalyzer::SingleThreadGetDirectoryContent(
         if (std::filesystem::is_directory(rIt.path()))
             directoryContainer->push_back(DirectoryInformation(rIt.path()));
         else
-            fileContainer->push_back(FileInformation(rIt.path()));
+            fileContainer->push_front(FileInformation(rIt.path()));
     }
 }
 
 void FileAnalyzer::MultiThreadGetDirectoryContent(
     std::string pathToDirectory,
-    std::vector<DirectoryInformation> *directoryContainer,
-    std::vector<FileInformation> *fileContainer,
+    std::list<DirectoryInformation> *directoryContainer,
+    std::list<FileInformation> *fileContainer,
     unsigned int threadNumber)
 {
     if (pathToDirectory.compare("") == 0 || !std::filesystem::exists(pathToDirectory) || !std::filesystem::is_directory(pathToDirectory))
@@ -64,7 +64,7 @@ void FileAnalyzer::MultiThreadGetDirectoryContent(
             if (std::filesystem::is_directory(directoryContentPaths[i]))
                 directoryContainer->push_back(DirectoryInformation(directoryContentPaths[i]));
             else
-                fileContainer->push_back(FileInformation(directoryContentPaths[i]));
+                fileContainer->push_front(FileInformation(directoryContentPaths[i]));
         }
     };
 

@@ -23,9 +23,9 @@ TEST(FileAnalyzer, SuccessSingleThreadGetDirectoryContent)
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation>
+    std::list<Analyzer::DirectoryInformation>
         directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::FileInformation> files;
 
     fileAnalyzer.SingleThreadGetDirectoryContent(pathToTestDirectory.string(), &directories, &files);
 
@@ -33,12 +33,12 @@ TEST(FileAnalyzer, SuccessSingleThreadGetDirectoryContent)
     EXPECT_EQ(files.size(), 6);
 }
 
-TEST(FileAnalyzer, NullDirectoryVectorArgumentSingleThreadGetDirectoryContent)
+TEST(FileAnalyzer, NullDirectorylistArgumentSingleThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::FileInformation> files;
 
     EXPECT_THROW(fileAnalyzer.SingleThreadGetDirectoryContent(
                      pathToTestDirectory.string(),
@@ -47,12 +47,12 @@ TEST(FileAnalyzer, NullDirectoryVectorArgumentSingleThreadGetDirectoryContent)
                  std::invalid_argument);
 }
 
-TEST(FileAnalyzer, NullFileVectorArgumentSingleThreadGetDirectoryContent)
+TEST(FileAnalyzer, NullFilelistArgumentSingleThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::DirectoryInformation> directories;
 
     EXPECT_THROW(fileAnalyzer.SingleThreadGetDirectoryContent(
                      pathToTestDirectory.string(),
@@ -64,8 +64,8 @@ TEST(FileAnalyzer, NullFileVectorArgumentSingleThreadGetDirectoryContent)
 TEST(FileAnalyzer, EmptyStringArgumentSingleThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
-    std::vector<Analyzer::DirectoryInformation> directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::FileInformation> files;
 
     EXPECT_THROW(fileAnalyzer.SingleThreadGetDirectoryContent(
                      "",
@@ -79,8 +79,8 @@ TEST(FileAnalyzer, SuccesTwoThreadGetDirectoryContent)
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation> directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::FileInformation> files;
 
     fileAnalyzer.MultiThreadGetDirectoryContent(pathToTestDirectory.string(), &directories, &files, 2);
 
@@ -93,8 +93,8 @@ TEST(FileAnalyzer, SuccesFourThreadGetDirectoryContent)
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation> directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::FileInformation> files;
 
     fileAnalyzer.MultiThreadGetDirectoryContent(pathToTestDirectory.string(), &directories, &files, 4);
 
@@ -102,12 +102,12 @@ TEST(FileAnalyzer, SuccesFourThreadGetDirectoryContent)
     EXPECT_EQ(files.size(), 6);
 }
 
-TEST(FileAnalyzer, NullDirectoryVectorArgumentMultiThreadGetDirectoryContent)
+TEST(FileAnalyzer, NullDirectorylistArgumentMultiThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::FileInformation> files;
 
     EXPECT_THROW(fileAnalyzer.MultiThreadGetDirectoryContent(
                      pathToTestDirectory.string(),
@@ -117,12 +117,12 @@ TEST(FileAnalyzer, NullDirectoryVectorArgumentMultiThreadGetDirectoryContent)
                  std::invalid_argument);
 }
 
-TEST(FileAnalyzer, NullFileVectorArgumentMultiThreadGetDirectoryContent)
+TEST(FileAnalyzer, NullFilelistArgumentMultiThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::DirectoryInformation> directories;
 
     EXPECT_THROW(fileAnalyzer.MultiThreadGetDirectoryContent(
                      pathToTestDirectory.string(),
@@ -135,8 +135,8 @@ TEST(FileAnalyzer, NullFileVectorArgumentMultiThreadGetDirectoryContent)
 TEST(FileAnalyzer, EmptyStringArgumentMultiThreadGetDirectoryContent)
 {
     Analyzer::FileAnalyzer fileAnalyzer;
-    std::vector<Analyzer::DirectoryInformation> directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::FileInformation> files;
 
     EXPECT_THROW(fileAnalyzer.MultiThreadGetDirectoryContent(
                      "",
@@ -151,8 +151,8 @@ TEST(FileAnalyzer, ZeroThreadMultiThreadGetDirectoryContent)
     Analyzer::FileAnalyzer fileAnalyzer;
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path pathToTestDirectory = currentPath.parent_path().append("TestDirectory");
-    std::vector<Analyzer::DirectoryInformation> directories;
-    std::vector<Analyzer::FileInformation> files;
+    std::list<Analyzer::DirectoryInformation> directories;
+    std::list<Analyzer::FileInformation> files;
 
     EXPECT_THROW(fileAnalyzer.MultiThreadGetDirectoryContent(
                      pathToTestDirectory.string(),
